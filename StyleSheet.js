@@ -3,8 +3,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginVertical: 100
+    flex: 1
   },
   item: {
     alignItems: 'center',
@@ -14,7 +13,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width / 3
   }
 });
-
 
 
 export default StyleSheet

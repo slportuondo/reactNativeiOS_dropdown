@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, FlatList, Image, TouchableOpacity, View } from 'react-native';
+import { Header } from 'react-native-elements'
 import styles from './StyleSheet.js'
 
 class App extends React.Component {
@@ -12,7 +13,6 @@ class App extends React.Component {
   }
 
   componentDidMount () {
-    console.log('COMPONENT NOW MOUNTED');
     fetch('http://localhost:3000/dropped/')
       .then(async(response) => {
         const resToJson = await response.json()
@@ -35,20 +35,25 @@ class App extends React.Component {
       <TouchableOpacity style={{flex: 1/3 , aspectRatio: 1 }}>
         <Image
           style={{height: 120, width: 120}}
-          source={{ uri: image.imgURI }}/>
+          source={{ uri: image.imgURI }}
+          resizeMode='contain'/>
       </TouchableOpacity>
     )
   }
 
   render() {
-    console.log('THIS IS STATE', this.state);
     return (
-      <FlatList
-        data={this.state.images}
-        renderItem = { ({item}) => this.renderItem(item) }
-        style = {styles.container}
-        numColumns = {3}
-      />
+      <View style={{flex: 10}}>
+        <Header
+          centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
+        />
+        <FlatList
+          data={this.state.images}
+          renderItem = { ({item}) => this.renderItem(item) }
+          style = {styles.container}
+          numColumns = {3}
+        />
+      </View>
     )
   }
 }
