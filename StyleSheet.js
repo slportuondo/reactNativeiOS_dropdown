@@ -12,10 +12,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 1,
     height: Dimensions.get('window').width / 3
-  },
-  // itemInvisible: {
-  //   backgroundColor: 'transparent',
-  // }
+  }
 });
 
 
