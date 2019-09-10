@@ -30,10 +30,25 @@ class App extends React.Component {
   }
 
 
+  renderItem(image) {
+    return (
+      <TouchableOpacity style={{flex:1, aspectRatio:3}}>
+        <Image
+          style={{height: 100, width: 100}}
+          source={{ uri: image.imgURI }}/>
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     console.log('THIS IS STATE', this.state);
     return (
-      <Text>Working</Text>
+      <FlatList
+        data={this.state.images}
+        renderItem = { ({item}) => this.renderItem(item) }
+        style = {styles.container}
+        numColumns = {3}
+      />
     )
   }
 }
