@@ -32,9 +32,9 @@ class App extends React.Component {
 
   renderItem(image) {
     return (
-      <TouchableOpacity style={{flex:1, aspectRatio:3}}>
+      <TouchableOpacity style={{flex: 1/3 , aspectRatio: 1 }}>
         <Image
-          style={{height: 100, width: 100}}
+          style={{height: 120, width: 120}}
           source={{ uri: image.imgURI }}/>
       </TouchableOpacity>
     )
