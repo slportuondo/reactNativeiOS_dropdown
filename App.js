@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, FlatList, Image, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, FlatList, Image, TouchableOpacity, View, Button, CameraRoll } from 'react-native';
 import { Header } from 'react-native-elements'
 import styles from './StyleSheet.js'
 
@@ -29,6 +29,11 @@ class App extends React.Component {
       });
   }
 
+  saveDroppedImages (images) {
+    images.forEach((image) => {
+      CameraRoll.saveToCameraRoll(image.imgURI)
+    })
+  }
 
   renderItem(image) {
     return (
@@ -47,12 +52,20 @@ class App extends React.Component {
         <Header
           centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
         />
+        <Button
+          title='Drop Selected'
+          onPress={() => {this.saveDroppedImages(this.state.images)}}
+        ></Button>
         <FlatList
           data={this.state.images}
           renderItem = { ({item}) => this.renderItem(item) }
+          keyExtractor={item => item._id}
           style = {styles.container}
           numColumns = {3}
         />
+        <View
+        style={{marginVertical: 8, borderBottomColor: '#737373'}}
+        ></View>
       </View>
     )
   }
