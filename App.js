@@ -1,13 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, FlatList, Image, TouchableOpacity, View, Button } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, FlatList, Image, TouchableOpacity, View, Button } from 'react-native'
 import { Header } from 'react-native-elements'
 import styles from './StyleSheet.js'
+import SessionController from './Session.js'
 
 class App extends React.Component {
   constructor () {
     super()
     this.state = {
-      sessionId: -1,
+      sessionId: null,
       images: [],
       loaded: false,
       selected: []
@@ -66,8 +67,9 @@ class App extends React.Component {
   render() {
     console.log('rendering', this.state);
     return (
-      this.state.loaded
-      ? <View style={{flex: 10}}>
+      this.state.sessionId
+      ? this.state.loaded
+        ? <View style={{flex: 10}}>
           <Header
             centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
           />
@@ -86,7 +88,8 @@ class App extends React.Component {
           style={{marginVertical: 8, borderBottomColor: '#737373'}}
           ></View>
         </View>
-      : null
+        : null
+      : <SessionController sessionId={this.state.sessionId}/>
     )
   }
 }
