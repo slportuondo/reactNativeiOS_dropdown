@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, View } from 'react-native'
+import { TextInput, View, Button } from 'react-native'
 import { Header } from 'react-native-elements'
 
 class SessionController extends React.Component {
@@ -23,16 +23,12 @@ class SessionController extends React.Component {
     })
   }
 
-  handleSubmit = () => {
-    console.log('session change attempted');
-  }
-
   render() {
     return (
       <View style={{flex:10}}>
-          <Header
-            centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
-          />
+        <Header
+          centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
+        />
         <TextInput
           value = {this.state.sessionName}
           onChangeText = {this.handleNameChange}
@@ -41,7 +37,13 @@ class SessionController extends React.Component {
         <TextInput
           value = {this.state.sessionKey}
           onChangeText = {this.handleKeyChange}
-          placeholder = 'Enter Session Key'
+          placeholder = 'Activate Session'
+        />
+        <Button
+          title='Enter Session'
+          onPress={(props) => {
+            this.props.sessionAuth(this.state)
+          }}
         />
         <View
           style={{marginVertical: 8, borderBottomColor: '#737373'}}

@@ -18,9 +18,9 @@ class App extends React.Component {
   componentDidMount () {
     fetch('http://localhost:3000/dropped/')
       .then(async(response) => {
-        const resToJson = await response.json()
+        const resToJs = await response.json()
         this.setState({
-          images: resToJson.droppedImages,
+          images: resToJs.droppedImages,
           loaded: true
         })
       })
@@ -64,10 +64,32 @@ class App extends React.Component {
     )
   }
 
+  sessionAuth =  (data) => {
+    const sessionResponse =  fetch('http://localhost:3000/session/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(async(response) => {
+      const resToJs = await response.json()
+      if (resToJs.wasSuccessful == true) {
+        this.setState({
+          sessionId: resToJs.sessionId,
+          loaded: true
+        })
+      }
+    })
+    .catch(function(error) {
+      throw(error)
+    })
+  }
+
   render() {
-    console.log('rendering', this.state);
+
     return (
-      this.state.sessionId
+      this.state.sessionId != null
       ? this.state.loaded
         ? <View style={{flex: 10}}>
           <Header
@@ -88,8 +110,8 @@ class App extends React.Component {
           style={{marginVertical: 8, borderBottomColor: '#737373'}}
           ></View>
         </View>
-        : null
-      : <SessionController sessionId={this.state.sessionId}/>
+        : <Text>Hi</Text>
+      : <SessionController sessionAuth={this.sessionAuth}/>
     )
   }
 }
