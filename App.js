@@ -7,8 +7,10 @@ class App extends React.Component {
   constructor () {
     super()
     this.state = {
-      images: [{imgURI: 'data:image/jpeg;base64,/9j/temp'}],
-      loaded: false
+      sessionId: -1,
+      images: [],
+      loaded: false,
+      selected: []
     }
   }
 
@@ -21,12 +23,27 @@ class App extends React.Component {
           loaded: true
         })
       })
-      .then((response) => {
-        console.log('Request successful');
-      })
+      .then(response => console.log('Request successful'))
       .catch(function(error) {
         throw(error)
       });
+  }
+
+  deletePhotos () {
+    fetch('http://localhost:3000/dropped/', {
+      method: 'DELETE'
+    })
+      .then(response => console.log(response))
+      .then(
+        this.setState({
+          images: [],
+          loaded: false,
+          selected: []
+        })
+      )
+      .catch(function(error) {
+        throw(error)
+      })
   }
 
   // saveDroppedImages (images) {
@@ -47,26 +64,29 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('rendering', this.state);
     return (
-      <View style={{flex: 10}}>
-        <Header
-          centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
-        />
-        <FlatList
-          data={this.state.images}
-          renderItem = { ({item}) => this.renderItem(item) }
-          keyExtractor={item => item._id}
-          style = {styles.container}
-          numColumns = {3}
-        />
-        <Button
-          title='Drop Selected'
-          onPress={() => null}
-        ></Button>
-        <View
-        style={{marginVertical: 8, borderBottomColor: '#737373'}}
-        ></View>
-      </View>
+      this.state.loaded
+      ? <View style={{flex: 10}}>
+          <Header
+            centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
+          />
+          <FlatList
+            data={this.state.images}
+            renderItem = { ({item}) => this.renderItem(item) }
+            keyExtractor={item => item._id}
+            style = {styles.container}
+            numColumns = {3}
+          />
+          <Button
+            title='Delete Dropped Photos'
+            onPress={() => this.deletePhotos()}
+          />
+          <View
+          style={{marginVertical: 8, borderBottomColor: '#737373'}}
+          ></View>
+        </View>
+      : null
     )
   }
 }
