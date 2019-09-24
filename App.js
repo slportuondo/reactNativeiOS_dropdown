@@ -15,22 +15,31 @@ class App extends React.Component {
     }
   }
 
-  loadImages () {
-    fetch('http://localhost:3000/dropped/', {
+  loadImages = async () => {
+    const droppedResponse = await fetch('http://localhost:3000/dropped/', {
       method: 'POST',
-      body: this.state.sessionId
+      body: JSON.stringify({id: this.state.sessionId}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-      .then(async(response) => {
-        const resToJs = await response.json()
+    .then(async(response) => {
+      console.log('this is the response from the server', response);
+      const resToJs = await response.json()
+      return await resToJs
+    })
+    .then((resToJs) => {
+      if (resToJs) {
         this.setState({
           images: resToJs.droppedImages,
           loaded: true
         })
-      })
-      .then(response => console.log('Request successful'))
-      .catch(function(error) {
-        throw(error)
-      });
+      }
+    })
+    .then(() => console.log('Request successful', this.state))
+    .catch(function(error) {
+      throw(error)
+    });
   }
 
   deletePhotos () {
@@ -61,8 +70,8 @@ class App extends React.Component {
     )
   }
 
-  sessionAuth = (data) => {
-    const sessionResponse =  fetch('http://localhost:3000/session/login', {
+  sessionAuth = async (data) => {
+    const sessionResponse =  await fetch('http://localhost:3000/session/login', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -70,13 +79,19 @@ class App extends React.Component {
       }
     })
     .then(async(response) => {
+      console.log('this is the response from the server', response);
       const resToJs = await response.json()
+      return await resToJs
+    })
+    .then(async (resToJs) => {
       if (resToJs.wasSuccessful == true) {
-        this.setState({
-          sessionId: resToJs.sessionId,
-          loaded: true
+        await this.setState({
+          sessionId: resToJs.sessionId
         })
       }
+    })
+    .then(() => {
+      this.loadImages()
     })
     .catch(function(error) {
       throw(error)
@@ -92,6 +107,10 @@ class App extends React.Component {
           <Header
             centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
           />
+          <Button
+            title='Reload'
+            onPress={() => this.loadImages()}
+          />
           <FlatList
             data={this.state.images}
             renderItem = { ({item}) => this.renderItem(item) }
@@ -103,15 +122,19 @@ class App extends React.Component {
             title='Delete Dropped Photos'
             onPress={() => this.deletePhotos()}
           />
-          <Button
-            title='Reload'
-            onPress={() => this.loadImages()}
-          />
           <View
           style={{marginVertical: 8, borderBottomColor: '#737373'}}
           ></View>
         </View>
-        : <Text>Hi</Text>
+        : <View style={{flex: 10}}>
+          <Header
+            centerComponent={{ text: 'DROPDOWN', style: { color: '#ffa' } }}
+          />
+          <Button
+            title='Reload'
+            onPress={() => this.loadImages()}
+          />
+          </View>
       : <SessionController sessionAuth={this.sessionAuth}/>
     )
   }
