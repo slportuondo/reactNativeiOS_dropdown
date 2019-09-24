@@ -15,8 +15,11 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount () {
-    fetch('http://localhost:3000/dropped/')
+  loadImages () {
+    fetch('http://localhost:3000/dropped/', {
+      method: 'POST',
+      body: this.state.sessionId
+    })
       .then(async(response) => {
         const resToJs = await response.json()
         this.setState({
@@ -47,12 +50,6 @@ class App extends React.Component {
       })
   }
 
-  // saveDroppedImages (images) {
-  //   images.forEach((image) => {
-  //     CameraRoll.saveToCameraRoll(image.imgURI)
-  //   })
-  // }
-
   renderItem(image) {
     return (
       <TouchableOpacity style={{flex: 1/3 , aspectRatio: 1 }}>
@@ -64,7 +61,7 @@ class App extends React.Component {
     )
   }
 
-  sessionAuth =  (data) => {
+  sessionAuth = (data) => {
     const sessionResponse =  fetch('http://localhost:3000/session/login', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -105,6 +102,10 @@ class App extends React.Component {
           <Button
             title='Delete Dropped Photos'
             onPress={() => this.deletePhotos()}
+          />
+          <Button
+            title='Reload'
+            onPress={() => this.loadImages()}
           />
           <View
           style={{marginVertical: 8, borderBottomColor: '#737373'}}
