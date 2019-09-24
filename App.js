@@ -24,7 +24,6 @@ class App extends React.Component {
       }
     })
     .then(async(response) => {
-      console.log('this is the response from the server', response);
       const resToJs = await response.json()
       return await resToJs
     })
@@ -36,27 +35,30 @@ class App extends React.Component {
         })
       }
     })
-    .then(() => console.log('Request successful', this.state))
     .catch(function(error) {
       throw(error)
     });
   }
 
-  deletePhotos () {
-    fetch('http://localhost:3000/dropped/', {
-      method: 'DELETE'
+  deleteImages = async () => {
+    await fetch('http://localhost:3000/dropped/', {
+      method: 'DELETE',
+      body: JSON.stringify({id: this.state.sessionId}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-      .then(response => console.log(response))
-      .then(
-        this.setState({
-          images: [],
-          loaded: false,
-          selected: []
-        })
-      )
-      .catch(function(error) {
-        throw(error)
+    .then(response => console.log(response))
+    .then(
+      this.setState({
+        images: [],
+        loaded: false,
+        selected: []
       })
+    )
+    .catch(function(error) {
+      throw(error)
+    })
   }
 
   renderItem(image) {
@@ -79,7 +81,6 @@ class App extends React.Component {
       }
     })
     .then(async(response) => {
-      console.log('this is the response from the server', response);
       const resToJs = await response.json()
       return await resToJs
     })
@@ -119,8 +120,8 @@ class App extends React.Component {
             numColumns = {3}
           />
           <Button
-            title='Delete Dropped Photos'
-            onPress={() => this.deletePhotos()}
+            title='Delete Dropped Images'
+            onPress={() => this.deleteImages()}
           />
           <View
           style={{marginVertical: 8, borderBottomColor: '#737373'}}
